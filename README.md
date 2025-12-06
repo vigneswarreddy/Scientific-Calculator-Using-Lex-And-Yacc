@@ -19,3 +19,4 @@ Index Terms —
 Lexical Analysis, Syntax Parsing, Compiler Design, Lex (Flex),
 Yacc (Bison), Flask, Scientific Calculator, Expression
 Evaluation, System Software, Web Integration.
+<img width="375" height="591" alt="image" src="https://github.com/user-attachments/assets/8c18b53d-b470-45a7-87de-c433b3d510f5" />
