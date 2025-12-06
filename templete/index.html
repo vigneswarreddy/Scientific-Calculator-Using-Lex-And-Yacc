@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scientific Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    .gradient-bg { background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); }
+    .calc-button { @apply bg-white text-gray-800 font-semibold rounded-full shadow-sm hover:bg-gray-100 active:bg-gray-200 transition-all duration-200 flex items-center justify-center transform hover:scale-105 active:scale-95; }
+    .operator-button { @apply bg-blue-100 text-blue-800 font-semibold rounded-full shadow-sm hover:bg-blue-200 active:bg-blue-300 transition-all duration-200 flex items-center justify-center transform hover:scale-105 active:scale-95; }
+    .function-button { @apply bg-blue-200 text-blue-900 font-semibold rounded-full shadow-sm hover:bg-blue-300 active:bg-blue-400 transition-all duration-200 flex items-center justify-center transform hover:scale-105 active:scale-95; }
+    .clear-button { @apply bg-red-100 text-red-800 font-semibold rounded-full shadow-sm hover:bg-red-200 active:bg-red-300 transition-all duration-200 flex items-center justify-center transform hover:scale-105 active:scale-95; }
+    .equals-button { @apply bg-blue-500 text-white font-semibold rounded-full shadow-sm hover:bg-blue-600 active:bg-blue-700 transition-all duration-200 flex items-center justify-center transform hover:scale-105 active:scale-95; }
+    .input-container { @apply relative; }
+    .input-icon { @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500; }
+    .backspace-icon { @apply absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-gray-700; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+  </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4 font-sans antialiased">
+
+  <div class="bg-white rounded-3xl shadow-xl p-6 w-full max-w-lg md:max-w-md mx-auto">
+    <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-6 tracking-tight">
+      <i class="fa-solid fa-calculator text-blue-600 mr-2"></i> Scientific Calculator
+    </h1>
+
+    <!-- Calculator Form -->
+    <form method="POST" id="calc-form" class="space-y-4">
+      <div class="input-container">
+        <i class="fa-solid fa-keyboard input-icon"></i>
+        <input 
+          type="text" 
+          name="expression" 
+          id="display" 
+          value="{{ expression }}" 
+          placeholder="Enter expression (e.g., sin(30) + log(10))"
+          class="w-full px-4 py-3 pl-10 pr-10 bg-gray-50 text-gray-900 text-right text-lg md:text-xl rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent shadow-inner placeholder-gray-500"
+        >
+        <i class="fa-solid fa-delete-left backspace-icon" onclick="backspace()"></i>
+      </div>
+
+      <!-- Keypad -->
+      <div class="grid grid-cols-5 gap-2 md:gap-3">
+        <button type="button" onclick="clearDisplay()" class="clear-button py-3 md:py-4">C</button>
+        <button type="button" onclick="appendToDisplay('sin(')" class="function-button py-3 md:py-4">sin</button>
+        <button type="button" onclick="appendToDisplay('cos(')" class="function-button py-3 md:py-4">cos</button>
+        <button type="button" onclick="appendToDisplay('tan(')" class="function-button py-3 md:py-4">tan</button>
+        <button type="button" onclick="appendToDisplay('/')" class="operator-button py-3 md:py-4"><i class="fa-solid fa-divide"></i></button>
+
+        <button type="button" onclick="appendToDisplay('ln(')" class="function-button py-3 md:py-4">ln</button>
+        <button type="button" onclick="appendToDisplay('log(')" class="function-button py-3 md:py-4">log</button>
+        <button type="button" onclick="appendToDisplay('sqrt(')" class="function-button py-3 md:py-4"><i class="fa-solid fa-square-root-variable"></i></button>
+        <button type="button" onclick="appendToDisplay('^')" class="operator-button py-3 md:py-4"><i class="fa-solid fa-superscript"></i></button>
+        <button type="button" onclick="appendToDisplay('%')" class="operator-button py-3 md:py-4">%</button>
+
+        <button type="button" onclick="appendToDisplay('π')" class="function-button py-3 md:py-4">π</button>
+        <button type="button" onclick="appendToDisplay('e')" class="function-button py-3 md:py-4">e</button>
+        <button type="button" onclick="appendToDisplay('(')" class="calc-button py-3 md:py-4">(</button>
+        <button type="button" onclick="appendToDisplay(')')" class="calc-button py-3 md:py-4">)</button>
+        <button type="button" onclick="appendToDisplay('*')" class="operator-button py-3 md:py-4"><i class="fa-solid fa-times"></i></button>
+
+        <button type="button" onclick="appendToDisplay('7')" class="calc-button py-3 md:py-4">7</button>
+        <button type="button" onclick="appendToDisplay('8')" class="calc-button py-3 md:py-4">8</button>
+        <button type="button" onclick="appendToDisplay('9')" class="calc-button py-3 md:py-4">9</button>
+        <button type="button" onclick="appendToDisplay('!')" class="function-button py-3 md:py-4">x!</button>
+        <button type="button" onclick="appendToDisplay('-')" class="operator-button py-3 md:py-4"><i class="fa-solid fa-minus"></i></button>
+
+        <button type="button" onclick="appendToDisplay('4')" class="calc-button py-3 md:py-4">4</button>
+        <button type="button" onclick="appendToDisplay('5')" class="calc-button py-3 md:py-4">5</button>
+        <button type="button" onclick="appendToDisplay('6')" class="calc-button py-3 md:py-4">6</button>
+        <button type="button" onclick="appendToDisplay('^2')" class="function-button py-3 md:py-4">x²</button>
+        <button type="button" onclick="appendToDisplay('+')" class="operator-button py-3 md:py-4"><i class="fa-solid fa-plus"></i></button>
+
+        <button type="button" onclick="appendToDisplay('1')" class="calc-button py-3 md:py-4">1</button>
+        <button type="button" onclick="appendToDisplay('2')" class="calc-button py-3 md:py-4">2</button>
+        <button type="button" onclick="appendToDisplay('3')" class="calc-button py-3 md:py-4">3</button>
+        <button type="button" onclick="appendToDisplay('exp(')" class="function-button py-3 md:py-4">EXP</button>
+        <button type="submit" class="equals-button py-3 md:py-4"><i class="fa-solid fa-equals"></i></button>
+
+        <button type="button" onclick="appendToDisplay('0')" class="calc-button col-span-3 py-3 md:py-4">0</button>
+        <button type="button" onclick="appendToDisplay('.')" class="calc-button py-3 md:py-4">.</button>
+        <button type="button" onclick="appendToDisplay('Ans')" class="function-button py-3 md:py-4">Ans</button>
+      </div>
+    </form>
+
+    <!-- Result Display -->
+    <div id="result-box" class="mt-4 p-4 bg-green-50 rounded-xl text-green-800 text-center hidden"></div>
+
+  </div>
+
+  <script>
+    function appendToDisplay(value) {
+      const display = document.getElementById('display');
+      display.value += value;
+      display.focus();
+    }
+
+    function clearDisplay() {
+      const display = document.getElementById('display');
+      display.value = '';
+      display.focus();
+    }
+
+    function backspace() {
+      const display = document.getElementById('display');
+      display.value = display.value.slice(0, -1);
+      display.focus();
+    }
+
+    // ✅ Keyboard handling + backend submit
+    document.addEventListener('keydown', function(event) {
+      const display = document.getElementById('display');
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (["Shift", "Alt", "Control", "Meta", "CapsLock", "Tab"].includes(event.key)) return;
+
+      if (event.key === "Enter") {
+        event.preventDefault();
+        const form = document.getElementById("calc-form");
+        const expression = display.value.trim();
+        if (expression !== "") {
+          form.submit();
+          display.value = ""; // ✅ clear after submitting
+        }
+      } else if (event.key === "Backspace") {
+        event.preventDefault();
+        backspace();
+      }
+    });
+
+    // ✅ Automatically clear display after result is rendered
+    window.addEventListener('DOMContentLoaded', () => {
+      const display = document.getElementById('display');
+      display.value = ''; // ✅ clear screen after backend result
+    });
+  </script>
+
+  {% if result %}
+  <script>
+    const resultBox = document.getElementById('result-box');
+    resultBox.innerHTML = `
+      <p class="text-md md:text-lg font-semibold">
+        <i class="fa-solid fa-check-circle mr-1"></i>
+        {{ expression }} = <span class="text-blue-600">{{ result }}</span>
+      </p>
+    `;
+    resultBox.classList.remove('hidden');
+    resultBox.classList.add('animate-fadeIn');
+  </script>
+  {% endif %}
+
+  {% if error %}
+  <script>
+    const resultBox = document.getElementById('result-box');
+    resultBox.innerHTML = `
+      <p class="text-md md:text-lg font-semibold text-red-700">
+        <i class="fa-solid fa-exclamation-circle mr-1"></i> {{ error }}
+      </p>
+    `;
+    resultBox.classList.remove('hidden');
+    resultBox.classList.add('animate-fadeIn');
+  </script>
+  {% endif %}
+</body>
+</html>
+
+
